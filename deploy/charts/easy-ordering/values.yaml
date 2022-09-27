@@ -1,0 +1,160 @@
+# Default values for easy-ordering.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+account:
+  image:
+    repository: Zehu1Sha0/easy-ordering-account
+    pullPolicy: Always
+    tag: "latest"
+  config:
+    dubbo:
+      registry: "nacos://127.0.0.1:8848"
+      protocol:
+        port: 20880
+    spring:
+      cloud:
+        nacos:
+          discovery:
+            server-addr: "127.0.0.1:8848"
+      datasource:
+        url: "jdbc:mysql://127.0.0.1:3306/seata?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true"
+        username: "root"
+        password: "root"
+    server:
+      port: 8102
+
+business:
+  image:
+    repository: Zehu1Sha0/easy-ordering-business
+    pullPolicy: Always
+    tag: "latest"
+  config:
+    dubbo:
+      registry: "nacos://127.0.0.1:8848"
+      protocol:
+        port: 10001
+    spring:
+      cloud:
+        nacos:
+          discovery:
+            server-addr: "127.0.0.1:8848"
+    server:
+      port: 8104
+
+stock:
+  image:
+    repository: Zehu1Sha0/easy-ordering-stock
+    pullPolicy: Always
+    tag: "latest"
+  config:
+    dubbo:
+      registry: "nacos://127.0.0.1:8848"
+      protocol:
+        port: 20882
+    spring:
+      cloud:
+        nacos:
+          discovery:
+            server-addr: "127.0.0.1:8848"
+      datasource:
+        url: "jdbc:mysql://127.0.0.1:3306/seata?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true"
+        username: "root"
+        password: "root"
+    server:
+      port: 8100
+
+
+order:
+  image:
+    repository: Zehu1Sha0/easy-ordering-stock
+    pullPolicy: Always
+    tag: "latest"
+  config:
+    dubbo:
+      registry: "nacos://127.0.0.1:8848"
+      protocol:
+        port: 20881
+    spring:
+      cloud:
+        nacos:
+          discovery:
+            server-addr: "127.0.0.1:8848"
+      datasource:
+        url: "jdbc:mysql://127.0.0.1:3306/seata?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true"
+        username: "root"
+        password: "root"
+    server:
+      port: 8101
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
